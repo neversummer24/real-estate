@@ -5,13 +5,13 @@ nav {
     justify-content: space-between;
     align-items: center;
     height: 100px;
-   
 
-    a{
-        transition: all 0.5s ease;  
+
+    a {
+        transition: all 0.5s ease;
         font-weight: semibold;
 
-        &:hover{
+        &:hover {
             scale: 1.1;
         }
 
@@ -19,21 +19,21 @@ nav {
             display: none;
         }
     }
-  
+
 
     .left {
-        flex:3;
+        flex: 3;
         display: flex;
         align-items: center;
         gap: 50px;
 
-        .logo{
+        .logo {
             font-weight: bold;
             font-size: 20px;
             display: flex;
-            gap:10px;
+            gap: 10px;
             align-items: center;
-          
+
 
             img {
                 width: 25px;
@@ -49,26 +49,63 @@ nav {
                 }
             }
         }
-    
+
     }
 
 
     .right {
-        flex:2;
+        flex: 2;
         display: flex;
         justify-content: flex-end;
         align-items: center;
         background-color: #fcf5f3;
-        height: 100%;  
+        height: 100%;
         box-sizing: border-box;
-  
+
         /* Prevent overflow */
 
-        .user{
+        .user {
             display: flex;
             align-items: center;
+            justify-content: space-between;
 
-            img{
+            .logout-modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                /* 背景暗化 */
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+                /* 确保弹出框在最上面 */
+
+                .logout-content {
+                    background-color: white;
+                    padding: 20px;
+                    border-radius: 8px;
+                    text-align: center;
+                    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+
+                    button {
+                        margin: 10px;
+                        padding: 10px 20px;
+                        border: none;
+                        background-color: #f44336;
+                        color: white;
+                        border-radius: 5px;
+                        cursor: pointer;
+                    }
+                }
+            }
+
+
+
+
+            img {
                 width: 50px;
                 height: 50px;
                 border-radius: 50%;
@@ -76,26 +113,27 @@ nav {
                 margin-right: 20px;
             }
 
-            span{
-                @include sm{
+            span {
+                @include sm {
                     display: none;
                 }
             }
 
-            .profile{
-                padding : 10px 20px;
+            .profile {
+                padding: 10px 20px;
                 background-color: #fece51;
                 border: none;
                 border-radius: 5px;
                 cursor: pointer;
                 position: relative;
 
-                .notification{
-                    position: absolute;           
-                    background-color: #ff0000; /* 通知的背景色 */
+                .notification {
+                    position: absolute;
+                    background-color: #ff0000;
+                    /* 通知的背景色 */
                     color: white;
                     border-radius: 50%;
-                    width:26px;
+                    width: 26px;
                     height: 26px;
                     display: flex;
                     justify-content: center;
@@ -105,34 +143,34 @@ nav {
                 }
             }
         }
-     
-       
-        
-        
+
+
+
+
         a {
             padding: 12px 24px;
             margin: 20px;
-            
-            @include md{
+
+            @include md {
                 padding: 12px 12px;
                 margin: 15px;
             }
-          }
+        }
 
-        .signup{
+        .signup {
             background-color: #fece51;
-            
+
         }
 
-        @include md{
+        @include md {
             background-color: transparent;
-           
+
         }
-        
-      
+
+
     }
 
-    .menuIcon{
+    .menuIcon {
         display: none;
 
         z-index: 999;
@@ -141,20 +179,20 @@ nav {
             display: inline;
         }
 
-        img{
+        img {
             width: 30px;
             height: 30px;
             cursor: pointer;
         }
     }
 
-    .menu{
+    .menu {
         position: absolute;
-        top:0;
-        right:-50%;
+        top: 0;
+        right: -50%;
 
         background-color: black;
-        color:white; 
+        color: white;
         height: 100vh;
         width: 50%;
 
@@ -167,14 +205,14 @@ nav {
 
         font-size: 20px;
 
-        &.active{
-            right:0;
+        &.active {
+            right: 0;
         }
 
         @include sm {
-           a{
-             display: initial;
-           }
+            a {
+                display: initial;
+            }
         }
     }
 }

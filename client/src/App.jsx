@@ -7,6 +7,7 @@ import Layout from "./routes/layout/Layout";
 import SinglePage from "./routes/singlePage/SinglePage";
 import Profile from "./routes/profile/Profile";
 import Register from "./routes/register/Register";
+import Login from "./routes/login/Login";
 
 
 
@@ -24,6 +25,7 @@ function App() {
           <Route path="/:id" element={<SinglePage />} />
           <Route path="profile" element={<Profile />} />
           <Route path="register" element={<Register />} />
+          <Route path="login" element={<Login />} />
           {/* <Route path="about" element={<AboutPage />} />
           <Route path="contact" element={<ContactPage />} />
           <Route path="agents" element={<AgentsPage />} /> */}

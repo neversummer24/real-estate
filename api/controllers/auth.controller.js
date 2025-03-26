@@ -41,15 +41,14 @@ export const login = async (req, res) => {
         const user = await prisma.user.findUnique({
             where: {
                 username,
-            }
+            },
         });
 
         if (!user) {
             return res.status(401).json({ message: "User not found!" });
         }
 
-        console.log(user);
-        console.log(password);
+       
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
 
@@ -59,6 +58,8 @@ export const login = async (req, res) => {
 
         const token = jwt.sign({ userId: user.id}, process.env.JWT_SECRET_KEY);
 
+        const {password : userPassword,...safeUser} = user;
+
         res.cookie("token", token, {
             httpOnly: true,
             secure: true,
@@ -67,7 +68,7 @@ export const login = async (req, res) => {
         });
 
         res.status(200).json({
-            message: "Login successful!",
+            safeUser
         });
 
     } catch (err) {

@@ -1,6 +1,6 @@
 import "./register.scss";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import apiRequest from "../../libs/apiRequest";
 import { useState } from "react";
 
 function Register() {
@@ -13,7 +13,7 @@ function Register() {
         setLoading(true);
         setError("");
         try {
-            const res = await axios.post("http://localhost:3000/api/auth/register", {
+            const res = await apiRequest.post("auth//register", {
                 username: e.target.username.value,
                 email: e.target.email.value,
                 password: e.target.password.value,
