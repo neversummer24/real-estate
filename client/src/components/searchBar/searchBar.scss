@@ -1,0 +1,98 @@
+@import "../../responsive.scss";
+
+.searchBar{
+    .type{
+        button{
+            padding: 16px 36px;
+            border: 1px solid #999;
+            background-color: #fff;
+            border-bottom: none;
+            text-transform: capitalize;
+            cursor: pointer;
+
+            &:first-child{
+                border-radius: 5px 0 0 0;
+                border-right: none;
+            }
+
+            &:last-child{
+                border-radius: 0 5px 0 0;
+                border-left: none;
+            }
+
+
+
+            &.active{
+                background-color: #000;
+                color: #fff;
+            }
+        }
+    }
+
+    form {
+        border: 1px solid #999;
+        display: flex;
+        justify-content: space-between;
+        height:50px;
+        gap:5px;
+
+        @include sm{
+            flex-direction: column;
+            border: none;
+        }
+
+        input{
+            border:none;
+            padding:0px 10px;
+            width:180px;
+
+            @include lg{
+                padding: 0px 5px;
+                
+                &:nth-child(2),&:nth-child(3){
+                    width:140px;
+                }
+            }
+
+            @include md {
+                width: 200px;
+                &:nth-child(2), &:nth-child(3) {
+                    width: 200px; /* Override with 200px in the md screen */
+                }
+              }
+        
+              @include sm{
+                width: auto;
+                &:nth-child(2),
+                &:nth-child(3) {
+                  width: auto;
+                }
+                padding: 20px;
+                border: 1px solid #999;
+              }
+            
+        }
+
+        button{
+            border:none;
+            cursor: pointer;
+            background-color: #fece51;
+            flex:1;
+
+            img{
+                width:24px;
+                height:24px;
+            }
+
+            @include sm{
+                padding: 10px;
+                border: 1px solid #999;
+            }
+        }
+       
+    }
+
+
+     
+        
+}
