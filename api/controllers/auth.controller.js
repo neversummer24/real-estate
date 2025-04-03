@@ -67,9 +67,7 @@ export const login = async (req, res) => {
             maxAge: 60 * 60 * 1000
         });
 
-        res.status(200).json({
-            safeUser
-        });
+        res.status(200).json(safeUser);
 
     } catch (err) {
         console.log(err);

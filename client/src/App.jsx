@@ -8,8 +8,16 @@ import SinglePage from "./routes/singlePage/SinglePage";
 import Profile from "./routes/profile/Profile";
 import Register from "./routes/register/Register";
 import Login from "./routes/login/Login";
+import { useContext } from "react";
+import { AuthContext } from "./context/AuthContext";
+import { Navigate, Outlet } from "react-router-dom";
+import NewPostPage from "./routes/newPostPage/NewPostPage";
+import { singlePageLoader } from "./libs/loader";
 
-
+const PrivateRoute = () => {
+  const {currentUser} = useContext(AuthContext);
+  return currentUser ? <Outlet /> : <Navigate to="/login" replace />;
+};
 
 
 function App() {
@@ -22,8 +30,11 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
           <Route path="list" element={<ListPage />} />
-          <Route path="/:id" element={<SinglePage />} />
-          <Route path="profile" element={<Profile />} />
+          <Route path="/:id" element={<SinglePage /> }  loader={singlePageLoader}/>
+          <Route element={<PrivateRoute />}>
+              <Route path="profile" element={<Profile />} />
+              <Route path="add" element={<NewPostPage />} />
+          </Route>
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
           {/* <Route path="about" element={<AboutPage />} />

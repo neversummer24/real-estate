@@ -3,6 +3,7 @@ import './homePage.scss';
 import SearchBar from '../../components/searchBar/SearchBar';
 
 function HomePage() {
+  
   return (
     <div className='homePage'>
       <div className='textContainer'>

@@ -23,7 +23,54 @@
       padding-right: 50px;
       display: flex;
       flex-direction: column;
-      gap: 50px;
+      gap: 40px;
+
+      
+        form {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+    
+          .item {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 10px;
+           
+            
+            label {
+              font-size: 14px;
+              font-weight: 500;
+              width: 80px;
+              color: #333;
+            }
+            
+            input {
+              border-radius: 5px;
+              width: 110px;
+              border: 1px solid #ccc;
+              padding: 6px 8px;
+              font-size: 14px;
+              transition: border-color 0.2s ease;
+              outline: none;
+              
+              &:focus {
+                border-color: #4a90e2;
+                box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+              }
+            }
+          }
+          button {
+            padding: 20px;
+            border-radius: 5px;
+            border: none;
+            background-color: teal;
+            color: black;
+            font-weight: 300;
+            cursor: pointer;
+          }
+        }
+      
 
       .title{
         display: flex;

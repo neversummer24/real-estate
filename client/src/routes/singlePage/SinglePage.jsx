@@ -1,64 +1,61 @@
-import React, { useState } from 'react';
-import './singlePage.scss';
-import Slider from '../../components/slider/Slider';
-import { singlePostData, userData } from '../../libs/dummyData';
-import MyMap from '../../components/myMap/MyMap';
-
-
-
+import "./singlePage.scss";
+import Slider from "../../components/slider/Slider";
+import { useNavigate, useLoaderData } from "react-router-dom";
+import DOMPurify from "dompurify";
+import { useContext, useState } from "react";
+import { AuthContext } from "../../context/AuthContext";
+import apiRequest from "../../lib/apiRequest";
+import MyMap from "../../components/myMap/MyMap";
 
 function SinglePage() {
-  const post = {
-    isSaved: false,
-    postDetail: {
-      utilities: "owner",
-      pet: "allowed",
-      income: "No limit",
-      size: 1000,
-      bedroom: 2,
-      bathroom: 1,
-      school: 500,
-      hospital: 1000
-    }
-  }
-
-
+  const post = useLoaderData();
   const [saved, setSaved] = useState(post.isSaved);
+  const { currentUser } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-  const handleSave = () => {
-
-  }
-
+  const handleSave = async () => {
+    if (!currentUser) {
+      navigate("/login");
+    }
+    
+    setSaved((prev) => !prev);
+    try {
+      await apiRequest.post("/users/save", { postId: post.id });
+    } catch (err) {
+      console.log(err);
+      setSaved((prev) => !prev);
+    }
+  };
 
   return (
     <div className="singlePage">
       <div className="details">
         <div className="wrapper">
-          <Slider images={singlePostData.images} />
+          <Slider images={post.images} />
           <div className="info">
             <div className="top">
               <div className="post">
-                <h1>{singlePostData.title}</h1>
+                <h1>{post.title}</h1>
                 <div className="address">
                   <img src="/pin.png" alt="" />
-                  <span>{singlePostData.address}</span>
+                  <span>{post.address}</span>
                 </div>
-                <div className="price">
-                  <span>${singlePostData.price}</span>
-                </div>
+                <div className="price">$ {post.price}</div>
               </div>
               <div className="user">
-                <img src={userData.img} alt="" />
-                <span>{userData.name}</span>
+                <img src={post.user.avatar} alt="" />
+                <span>{post.user.username}</span>
               </div>
             </div>
-            <div className="bottom">
-              {singlePostData.description}
-            </div>
+            <div
+              className="bottom"
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(post.postDetail.desc),
+              }}
+            ></div>
           </div>
         </div>
       </div>
-
       <div className="features">
         <div className="wrapper">
           <p className="title">General</p>
@@ -126,7 +123,7 @@ function SinglePage() {
               <img src="/pet.png" alt="" />
               <div className="featureText">
                 <span>Bus Stop</span>
-                <p>{post.postDetail?.bus}m away</p>
+                <p>{post.postDetail.bus}m away</p>
               </div>
             </div>
             <div className="feature">
@@ -139,7 +136,7 @@ function SinglePage() {
           </div>
           <p className="title">Location</p>
           <div className="mapContainer">
-            <MyMap items={[singlePostData]} />
+            <MyMap items={[post]} />
           </div>
           <div className="buttons">
             <button>
@@ -158,9 +155,8 @@ function SinglePage() {
           </div>
         </div>
       </div>
-
     </div>
-  )
+  );
 }
 
-export default SinglePage
+export default SinglePage;

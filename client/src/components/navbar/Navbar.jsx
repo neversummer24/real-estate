@@ -5,12 +5,14 @@ import { userData } from "../../libs/dummyData";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import apiRequest from "../../libs/apiRequest";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 
 function Navbar() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
-  const user = true;
+  const {currentUser,updateUser} = useContext(AuthContext);
 
   const [showLogout, setShowLogout] = useState(false);  // 控制弹框的显示和隐藏
 
@@ -20,7 +22,10 @@ function Navbar() {
   const logout = async () => {
     try{
       const res = await apiRequest.post("auth/logout");
-      localStorage.removeItem("user");
+
+      updateUser(null);
+      toggleLogout();
+
       navigate("/");
     }catch(err){
       console.log(err);
@@ -42,10 +47,10 @@ function Navbar() {
 
       <div className="right">
 
-        {user ? (
+        {currentUser ? (
           <div className="user">
-            <img src={userData.image} alt="" />
-            <span onClick={toggleLogout}>{userData.name}</span>
+            <img src={currentUser.avatar || "/noavatar.png"} alt="" />
+            <span onClick={toggleLogout}>{currentUser.username}</span>
             <Link to="/profile" className="profile">
               <div className="notification">3 </div>
               <span>Profile</span>
@@ -64,8 +69,8 @@ function Navbar() {
 
           </div>
         ) : (<>
-          <a href='#' className="signin">Sign in</a>
-          <a href='#' className="signup">Sign up</a>
+          <a href='/login' className="signin">Sign in</a>
+          <a href='/register' className="signup">Sign up</a>
         </>
         )}
 
@@ -79,8 +84,8 @@ function Navbar() {
           <a href='#'>About</a>
           <a href='#'>Contact</a>
           <a href='#'>Agents</a>
-          <a href='#'>Sign in</a>
-          <a href='#'>Sign up</a>
+          <a href='/login'>Sign in</a>
+          <a href='/register'>Sign up</a>
         </div>
 
       </div>
