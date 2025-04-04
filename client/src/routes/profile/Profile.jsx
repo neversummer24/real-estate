@@ -2,13 +2,15 @@ import React from 'react';
 import List from '../../components/list/List';
 import "./profile.scss";
 import Chat from '../../components/chat/Chat';
-import { useContext, useState } from "react";
+import { Suspense,useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import apiRequest from "../../libs/apiRequest";
-import { useNavigate } from "react-router-dom";
+import { Await, Link, useLoaderData, useNavigate } from "react-router-dom";
+
 
 
 function Profile() {
+    const data = useLoaderData();
 
     const [error, setError] = useState("");
    
@@ -91,24 +93,49 @@ function Profile() {
 
                     <div className="title">
                         <h1>My Listings</h1>
-                        <button>Add a listing</button>
+                        <Link to="/add">
+                            <button>Add New Post</button>
+                        </Link>
                     </div>
 
-                    <List />
+                    <Suspense fallback={<p>Loading...</p>}>
+            <Await
+              resolve={data.postPromise}
+              errorElement={<p>Error loading posts!</p>}
+            >
+              {(postPromise) => <List posts={postPromise.data.userPosts} />}
+            </Await>
+          </Suspense>
 
 
                     <div className="title">
                         <h1>Saved Listings</h1>
                     </div>
 
+                    <Suspense fallback={<p>Loading...</p>}>
+            <Await
+              resolve={data.postPromise}
+              errorElement={<p>Error loading posts!</p>}
+            >
+              {(postPromise) => <List posts={postPromise.data.savedPosts} />}
+            </Await>
+          </Suspense>
+
 
                 </div>
             </div>
 
             <div className="chatContainer">
-                <div className="wrapper">
-                    <Chat />
-                </div>
+            <div className="wrapper">
+          <Suspense fallback={<p>Loading...</p>}>
+            <Await
+              resolve={data.chatResponse}
+              errorElement={<p>Error loading chats!</p>}
+            >
+              {(chatResponse) => <Chat chats={chatResponse.data}/>}
+            </Await>
+          </Suspense>
+        </div>
             </div>
         </div>
     )

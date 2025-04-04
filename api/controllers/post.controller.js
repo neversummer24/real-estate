@@ -28,6 +28,7 @@ export const getPosts = async (req, res) => {
 };
 
 export const getPost = async (req, res) => {
+
   const id = req.params.id;
   try {
     const post = await prisma.post.findUnique({
@@ -47,12 +48,13 @@ export const getPost = async (req, res) => {
 
     if (token) {
       jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, payload) => {
+        console.log("getPost payload", payload);
         if (!err) {
           const saved = await prisma.savedPost.findUnique({
             where: {
               userId_postId: {
                 postId: id,
-                userId: payload.id,
+                userId: payload.userId,
               },
             },
           });

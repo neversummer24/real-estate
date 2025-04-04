@@ -2,8 +2,8 @@ import { useState } from "react";
 import "./newPostPage.scss";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import apiRequest from "../../lib/apiRequest";
-import UploadWidget from "../../components/uploadWidget/UploadWidget";
+import apiRequest from "../../libs/apiRequest";
+import UploadWidget from "../../components/uploadWidget/uploadWidget";
 import { useNavigate } from "react-router-dom";
 
 function NewPostPage() {
