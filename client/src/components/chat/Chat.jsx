@@ -1,55 +1,140 @@
-import React from 'react';
-import './chat.scss';
-import { useState } from 'react';
-function Chat() {
-  
-  const [chat, setChat] = useState(true);
+import { useContext, useEffect, useRef, useState } from "react";
+import "./chat.scss";
+import { AuthContext } from "../../context/AuthContext";
+import apiRequest from "../../libs/apiRequest";
+import { SocketContext } from "../../context/SocketContext";
+import { notificationStore } from "../../libs/notificationStore";
 
-  
+function Chat({ chats }) {
+  const [chat, setChat] = useState(null);
+  const { currentUser } = useContext(AuthContext);
+
+  console.log("chat",chat);
+  const { socket } = useContext(SocketContext);
+
+  const messageEndRef = useRef();
+
+  const decrease = notificationStore((state) => state.decrease);
+
+  useEffect(() => {
+    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chat]);
+
+  const handleOpenChat = async (id, receiver) => {
+    try {
+      const res = await apiRequest("/chats/" + id);
+      if (!res.data.seenBy.includes(currentUser.id)) {
+        decrease();
+      }
+      setChat({ ...res.data, receiver });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+    const text = formData.get("text");
+
+    if (!text) return;
+    try {
+      const res = await apiRequest.post("/messages/" + chat.id, { text });
+      setChat((prev) => ({ ...prev, messages: [...prev.messages, res.data] }));
+      e.target.reset();
+      socket.emit("sendMessage", {
+        receiverId: chat.receiver.id,
+        data: res.data,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    const read = async () => {
+      try {
+        await apiRequest.put("/chats/read/" + chat.id);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    if (chat && socket) {
+      socket.on("getMessage", (data) => {
+        if (chat.id === data.chatId) {
+          setChat((prev) => ({ ...prev, messages: [...prev.messages, data] }));
+          read();
+        }
+      });
+    }
+    return () => {
+      socket.off("getMessage");
+    };
+  }, [socket, chat]);
+
   return (
     <div className="chat">
-        <div className="messages">
-            <h1>Messages</h1>
-
-            <div className="message">
-                <img src="/user.png" alt="" />
-                <span>Hi</span>
-                <p>Hello</p>
+      <div className="messages">
+        <h1>Messages</h1>
+        {chats?.map((c) => (
+          <div
+            className="message"
+            key={c.id}
+            style={{
+              backgroundColor:
+                c.seenBy.includes(currentUser.id) || chat?.id === c.id
+                  ? "white"
+                  : "#fecd514e",
+            }}
+            onClick={() => handleOpenChat(c.id, c.receiver)}
+          >
+            <img src={c.receiver.avatar || "/noavatar.png"} alt="" />
+            <span>{c.receiver.username}</span>
+            <p>{c.lastMessage}</p>
+          </div>
+        ))}
+      </div>
+      {chat && (
+        <div className="chatBox">
+          <div className="top">
+            <div className="user">
+              <img src={chat.receiver.avatar || "noavatar.png"} alt="" />
+              {chat.receiver.username}
             </div>
-
+            <span className="close" onClick={() => setChat(null)}>
+              X
+            </span>
+          </div>
+          <div className="center">
+            {chat.messages.map((message) => (
+              <div
+                className="chatMessage"
+                style={{
+                  alignSelf:
+                    message.userId === currentUser.id
+                      ? "flex-end"
+                      : "flex-start",
+                  textAlign:
+                    message.userId === currentUser.id ? "right" : "left",
+                }}
+                key={message.id}
+              >
+                <p>{message.text}</p>
+                <span>{message.createdAt}</span>
+              </div>
+            ))}
+            <div ref={messageEndRef}></div>
+          </div>
+          <form onSubmit={handleSubmit} className="bottom">
+            <textarea name="text"></textarea>
+            <button>Send</button>
+          </form>
         </div>
-
-        { chat && <div className="chatBox">
-            <div className="top">
-                <div className="user">
-                    <img src="/user.png" alt="" />
-                    <span>John Doe</span>
-                </div>
-                <span className='close' onClick={() => setChat(false)}>X</span>
-            </div>
-            <div className="center">
-                <div className="chatMessage">
-                    <p>Hello</p>
-                    <span>12:00 </span>
-                </div>
-
-                <div className="chatMessage own">
-                    <p>Hello</p>
-                    <span>12:00 </span>
-                </div>
-
-                <div className="chatMessage">
-                    <p>Hello</p>
-                    <span>12:00 </span>
-                </div>
-            </div>
-            <div className="bottom">
-                <textarea placeholder='Write something...' className='messageInput'/>    
-                <button>Send</button>
-            </div>
-        </div>}
+      )}
     </div>
-  )
+  );
 }
 
-export default Chat
+export default Chat;

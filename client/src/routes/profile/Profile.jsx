@@ -11,6 +11,7 @@ import { Await, Link, useLoaderData, useNavigate } from "react-router-dom";
 
 function Profile() {
     const data = useLoaderData();
+    console.log("data", data);
 
     const [error, setError] = useState("");
    
@@ -44,7 +45,7 @@ function Profile() {
     };
 
 
-  
+ 
 
     return (
         <div className="profilePage">
@@ -117,7 +118,7 @@ function Profile() {
               resolve={data.postPromise}
               errorElement={<p>Error loading posts!</p>}
             >
-              {(postPromise) => <List posts={postPromise.data.savedPosts} />}
+              {(postPromise) => <List posts={postPromise?.data.savedPosts} />}
             </Await>
           </Suspense>
 
@@ -129,10 +130,10 @@ function Profile() {
             <div className="wrapper">
           <Suspense fallback={<p>Loading...</p>}>
             <Await
-              resolve={data.chatResponse}
+              resolve={data.chatPromise}
               errorElement={<p>Error loading chats!</p>}
             >
-              {(chatResponse) => <Chat chats={chatResponse.data}/>}
+              {(chatPromise) => <Chat chats={chatPromise?.data}/>}
             </Await>
           </Suspense>
         </div>

@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 
 export const getUser = async (req, res) => {
   const id = req.params.id;
+  console.log("id", id);
   try {
     const user = await prisma.user.findUnique({
       where: { id },
@@ -108,6 +109,7 @@ export const savePost = async (req, res) => {
 
 export const profilePosts = async (req, res) => {
   const tokenUserId = req.userId;
+  
   try {
     const userPosts = await prisma.post.findMany({
       where: { userId: tokenUserId },
