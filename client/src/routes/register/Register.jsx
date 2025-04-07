@@ -14,7 +14,7 @@ function Register() {
         setError("");
         const formData = new FormData(e.target);
         try {
-            const res = await apiRequest.post("auth//register", {
+            const res = await apiRequest.post("auth/register", {
                 username: formData.get("username"),
                 email: formData.get("email"),
                 password: formData.get("password"),
@@ -32,7 +32,7 @@ function Register() {
     return (
         <div className="registerPage">
           <div className="formContainer">
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} data-testid="test-form">
               <h1>Create an Account</h1>
               <input name="username" type="text" placeholder="Username" />
               <input name="email" type="text" placeholder="Email" />

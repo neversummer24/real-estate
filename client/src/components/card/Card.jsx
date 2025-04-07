@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom';
 function Card({item}) {
   return (
     <div className="card">
-      <Link to={`/${item.id}`} className="imageContainer">
-        <img src={item.images} alt="" />
+      <Link to={`/${item.id}`} className="imageContainer" data-testid="test-link">
+        <img src={item.images} alt="img1" />
       </Link>         
       <div className="textContainer">
         <h2 className='title'>{item.title}</h2>
